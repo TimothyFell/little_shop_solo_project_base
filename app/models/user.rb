@@ -6,6 +6,9 @@ class User < ApplicationRecord
   validates_presence_of :name, :address, :city, :state, :zip
   validates :email, presence: true, uniqueness: true
 
+
+  # reg expressions to check the password
+  # string for what we want
   PASSWORD_FORMAT = /\A
     (?=.{8,})          # Must contain 8 or more characters
     (?=.*\d)           # Must contain a digit
@@ -14,7 +17,8 @@ class User < ApplicationRecord
     (?=.*[[:^alnum:]]) # Must contain a symbol
   /x
 
-  validates :password, confirmation:true, format: PASSWORD_FORMAT
+  validates :password, confirmation:true, format: PASSWORD_FORMAT, on: :create
+  validates :password, confirmation:true, format: PASSWORD_FORMAT, allow_blank: true, on: :update
 
   enum role: %w(user merchant admin)
 

@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'Admin-only user management' do 
+RSpec.describe 'Admin-only user management' do
   before(:each) do
     @admin = create(:admin)
     @active_user = create(:user)
@@ -12,7 +12,7 @@ RSpec.describe 'Admin-only user management' do
     fill_in :email, with: @admin.email
     fill_in :password, with: @admin.password
     click_button 'Log in'
-  
+
     visit users_path
 
     within "#user-#{@active_user.id}" do
@@ -54,7 +54,7 @@ RSpec.describe 'Admin-only user management' do
     fill_in :email, with: @inactive_user.email
     fill_in :password, with: @inactive_user.password
     click_button 'Log in'
-    
+
     expect(current_path).to eq(profile_path)
   end
 
@@ -63,12 +63,12 @@ RSpec.describe 'Admin-only user management' do
     fill_in :email, with: @admin.email
     fill_in :password, with: @admin.password
     click_button 'Log in'
-  
+
     visit users_path
 
     within "#user-#{@active_user.id}" do
       expect(page).to have_content("#{@active_user.email} User")
-      click_button "Upgrade to Merchant"
+      click_button("Upgrade to Merchant")
     end
     expect(current_path).to eq(users_path)
     within "#user-#{@active_user.id}" do
@@ -83,7 +83,7 @@ RSpec.describe 'Admin-only user management' do
     fill_in :email, with: @admin.email
     fill_in :password, with: @admin.password
     click_button 'Log in'
-  
+
     visit users_path
 
     within "#user-#{@active_merchant.id}" do

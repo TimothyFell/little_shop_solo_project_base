@@ -44,18 +44,20 @@ class UsersController < ApplicationController
 
         if current_admin? && params[:toggle]
           if params[:toggle] == 'enable'
-            @user.active = true
+            # @user.active = true
+            @user.update!(active: true)
           elsif params[:toggle] == 'disable'
-            @user.active = false
+            # @user.active = false
+            @user.update!(active: false)
           elsif params[:toggle] == 'role'
             if @user.merchant?
-              @user.role = :user
+              # @user.role = :user
+              @user.update!(role: :user)
             elsif @user.user?
-              @user.role = :merchant
+              # @user.role = :merchant
+              @user.update!(role: :merchant)
             end
           end
-
-          @user.save
 
           flash[:success] = 'Profile data was successfully updated.'
           if params[:toggle] && params[:toggle] != 'role' && @user.merchant?
