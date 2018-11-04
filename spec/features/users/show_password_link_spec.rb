@@ -7,9 +7,10 @@ RSpec.describe 'Show Password Link' do
   end
 
   describe 'On the registration page' do
-    skip("I NEED CAPYBARA JAVASCRIPT")
 
     it 'it shows the user what they typed ito the password field' do
+      skip("I NEED CAPYBARA-WEBKIT")
+
       visit register_path
 
       fill_in :user_password, with: @password
