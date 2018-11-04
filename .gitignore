@@ -20,4 +20,4 @@
 .idea
 .ruby-version
 
-coverage/
+/coverage/
