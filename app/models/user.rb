@@ -1,11 +1,24 @@
 class User < ApplicationRecord
-  has_secure_password
 
   has_many :orders
   has_many :items
 
   validates_presence_of :name, :address, :city, :state, :zip
   validates :email, presence: true, uniqueness: true
+
+
+  # reg expressions to check the password
+  # string for what we want
+  PASSWORD_FORMAT = /\A
+    (?=.{8,})          # Must contain 8 or more characters
+    (?=.*\d)           # Must contain a digit
+    (?=.*[a-z])        # Must contain a lower case character
+    (?=.*[A-Z])        # Must contain an upper case character
+    (?=.*[[:^alnum:]]) # Must contain a symbol
+  /x
+
+  validates :password, confirmation:true, format: PASSWORD_FORMAT, on: :create
+  validates :password, confirmation:true, format: PASSWORD_FORMAT, allow_blank: true, on: :update
 
   enum role: %w(user merchant admin)
 
@@ -28,7 +41,7 @@ class User < ApplicationRecord
       .where("order_items.fulfilled=?", true)
       .sum("order_items.quantity")
   end
-  
+
   def total_inventory
     items.sum(:inventory)
   end
@@ -120,8 +133,8 @@ class User < ApplicationRecord
   end
 
   def self.merchant_by_speed(quantity, order)
-    select("distinct users.*, 
-      CASE 
+    select("distinct users.*,
+      CASE
         WHEN order_items.updated_at > order_items.created_at THEN coalesce(EXTRACT(EPOCH FROM order_items.updated_at) - EXTRACT(EPOCH FROM order_items.created_at),0)
         ELSE 1000000000 END as time_diff")
       .joins(:items)
@@ -140,4 +153,7 @@ class User < ApplicationRecord
   def self.slowest_merchants(quantity)
     merchant_by_speed(quantity, :desc)
   end
+
+  has_secure_password
+
 end
