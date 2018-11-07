@@ -14,6 +14,7 @@ class DashboardController < ApplicationController
       @most_active_buyer = @merchant.top_active_user
       @biggest_order = @merchant.biggest_order
       @top_buyers = @merchant.top_buyers(3)
+      @coupons = @merchant.coupon_codes
       render :'merchants/show'
     elsif current_admin?
       @top_3_shipping_states = Order.top_shipping(:state, 3)

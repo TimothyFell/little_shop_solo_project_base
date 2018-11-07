@@ -35,6 +35,18 @@
       <td colspan=4></td>
       <td>Grand Total: <%= number_to_currency(@cart.grand_total) %></td>
     </tr>
+    <% if @coupon %>
+      <% @coupon_value = "#{@coupon.value}%" if @coupon.coupon_type == 'percentage' %>
+      <% @coupon_value = "#{number_to_currency(@coupon.value)} off" if @coupon.coupon_type == 'dollars_off' %>
+      <tr>
+        <td colspan=4></td>
+        <td>Discount: <%= @coupon_value %></td>
+      </tr>
+      <tr>
+        <td colspan=4></td>
+        <td>New Total: <%= number_to_currency( @cart.discounted_total(@coupon) ) %></td>
+      </tr>
+    <% end %>
   </tbody>
 </table>
 

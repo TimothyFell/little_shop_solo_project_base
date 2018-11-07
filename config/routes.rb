@@ -18,7 +18,10 @@ Rails.application.routes.draw do
   namespace :dashboard do
     resources :orders, only: [:index]
     resources :items, only: [:index]
+    resources :coupon_codes, only: [:new, :index]
   end
+  resources :coupon_codes, only: [:create, :destroy]
+
 
   resources :orders, only: [:index, :show, :create] do
     patch ':order_item_id/fulfill', to: 'order_items#update', as: 'item_fulfill'
@@ -32,12 +35,15 @@ Rails.application.routes.draw do
     patch 'disable', to: 'users#update'
   end
 
+
+
   resources :merchants, only: [:index, :update, :show] do
     resources :orders, only: [:index]
     resources :items, only: [:index, :new, :edit, :create, :update] do
       patch 'enable', to: 'items#update'
       patch 'disable', to: 'items#update'
     end
+
   end
 
   resources :carts, path: '/cart', only: [:index]
