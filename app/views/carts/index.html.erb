@@ -35,6 +35,13 @@
       <td colspan=4></td>
       <td>Grand Total: <%= number_to_currency(@cart.grand_total) %></td>
     </tr>
+    <tr>
+      <td colspan=4></td>
+      <%= form_tag(add_coupon_to_cart_path, :method => 'put') do |f| %>
+      <td><%= label_tag(:code, "Enter Coupon:") %> <%= text_field_tag(:code) %></td>
+      <td><%= submit_tag("Apply Coupon") %></td>
+      <% end %>
+    </tr>
     <% if @coupon %>
       <% @coupon_value = "#{@coupon.value}%" if @coupon.coupon_type == 'percentage' %>
       <% @coupon_value = "#{number_to_currency(@coupon.value)} off" if @coupon.coupon_type == 'dollars_off' %>
@@ -47,16 +54,20 @@
         <td>New Total: <%= number_to_currency( @cart.discounted_total(@coupon) ) %></td>
       </tr>
     <% end %>
+    <tr>
+      <td colspan=4></td>
+      <td><%= button_to 'Empty Cart', cart_path, method: :delete %></td>
+    </tr>
+    <% if current_user %>
+    <tr>
+      <td colspan=4></td>
+      <td><%= button_to 'Check out', orders_path, method: :post %></td>
+    </tr>
+    <% else %>
+      <div id="must-log-in">
+      You must <%= link_to 'register', register_path %> or
+      <%= link_to 'log in', login_path %> to complete your purchase.
+      </div>
+    <% end %>
   </tbody>
 </table>
-
-<%= button_to 'Empty Cart', cart_path, method: :delete %>
-
-<% if current_user %>
-  <%= button_to 'Check out', orders_path, method: :post %>
-<% else %>
-  <div id="must-log-in">
-  You must <%= link_to 'register', register_path %> or
-  <%= link_to 'log in', login_path %> to complete your purchase.
-  </div>
-<% end %>

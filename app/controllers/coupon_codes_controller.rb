@@ -4,7 +4,7 @@ class CouponCodesController < ApplicationController
     render file: 'errors/not_found', status: 404 unless current_user.id == session[:user_id]
 
   	if coupon_params[:coupon_type] == 'dollars_off' && coupon_params[:minimum_order].to_f < coupon_params[:value].to_f
-      flash[:notice] = 'The discount amount you entered was larger than the minimum order amount. Please make the minimum order value larger than the coupon value.'
+      flash[:notice] = 'The discount amount you entered was larger than the minimum order amount. Please make the minimum order amount is larger than the coupon value.'
   		redirect_to new_dashboard_coupon_code_path
     else
       user = User.find(session[:user_id])
