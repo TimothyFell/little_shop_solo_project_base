@@ -3,6 +3,7 @@ class CartsController < ApplicationController
 
   def index
     @items = Item.where(id: @cart.contents.keys)
+    @coupon = CouponCode.find_by(code: session[:coupon_code]) if session[:coupon_code]
   end
 
   def update
@@ -23,6 +24,11 @@ class CartsController < ApplicationController
     end
     session[:cart] = @cart.contents
     redirect_back(fallback_location: items_path)
+  end
+
+  def coupon
+    session[:coupon_code] = params[:code]
+    redirect_to carts_path
   end
 
   def empty

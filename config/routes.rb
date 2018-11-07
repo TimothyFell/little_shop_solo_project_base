@@ -18,7 +18,10 @@ Rails.application.routes.draw do
   namespace :dashboard do
     resources :orders, only: [:index]
     resources :items, only: [:index]
+    resources :coupon_codes, only: [:new, :index]
   end
+  resources :coupon_codes, only: [:create, :destroy]
+
 
   resources :orders, only: [:index, :show, :create] do
     patch ':order_item_id/fulfill', to: 'order_items#update', as: 'item_fulfill'
@@ -32,18 +35,22 @@ Rails.application.routes.draw do
     patch 'disable', to: 'users#update'
   end
 
+
+
   resources :merchants, only: [:index, :update, :show] do
     resources :orders, only: [:index]
     resources :items, only: [:index, :new, :edit, :create, :update] do
       patch 'enable', to: 'items#update'
       patch 'disable', to: 'items#update'
     end
+
   end
 
   resources :carts, path: '/cart', only: [:index]
   delete '/cart', to: 'carts#empty'
   delete '/cart/:item_id', to: 'carts#remove'
   patch '/cart/:item_id', to: 'carts#update', as: 'cart_item_quantity'
+  put '/cart', to:'carts#coupon', as: 'add_coupon_to_cart'
 
   # custom error pages
   get "/404", to: "errors#not_found"

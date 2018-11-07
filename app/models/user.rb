@@ -2,6 +2,7 @@ class User < ApplicationRecord
 
   has_many :orders
   has_many :items
+  has_many :coupon_codes
 
   validates_presence_of :name, :address, :city, :state, :zip
   validates :email, presence: true, uniqueness: true
@@ -9,6 +10,8 @@ class User < ApplicationRecord
 
   # reg expressions to check the password
   # string for what we want
+
+
   PASSWORD_FORMAT = /\A
     (?=.{8,})          # Must contain 8 or more characters
     (?=.*\d)           # Must contain a digit

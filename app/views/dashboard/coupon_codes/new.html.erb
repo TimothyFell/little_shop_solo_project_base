@@ -1,0 +1,11 @@
+<h1>Create a New Coupon</h1>
+
+<%= form_for [@dashboard, @coupon] do |f| %>
+  <%= f.label :coupon_type %>
+  <%= f.select(:coupon_type, options_for_select([['Percentage', 'percentage'], ['Dollars Off', 'dollars_off']], 0)) %>
+  <%= f.label :value %>
+  <%= f.number_field :value, placeholder: 'ex: 5.50', step: :any %>
+  <%= f.label :minimum_order, 'Minimum Order Amount' %>
+  <%= f.number_field :minimum_order, step: :any %>
+  <%= f.submit %>
+<% end %>

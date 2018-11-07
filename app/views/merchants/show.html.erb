@@ -1,7 +1,9 @@
 <h1>Merchant Dashboard</h1>
 
 <p><%= link_to "Edit Profile Data", current_admin? ? edit_user_path(@merchant.id) : profile_edit_path %></p>
-<p><%= link_to 'My Items for Sale', current_admin? ? merchant_items_path(@merchant) : dashboard_items_path %>
+<p><%= link_to 'My Items for Sale', current_admin? ? merchant_items_path(@merchant) : dashboard_items_path %></p>
+<p><%= link_to "New Coupon", new_dashboard_coupon_code_path %></p>
+
 
 <div id="stats">
   <div id="inv-stats">
@@ -11,7 +13,7 @@
   </div>
   <div id="shipping-stats">
     <h3>Shipping Stats</h3>
-    
+
     <div id='stats-top-states'>
     <p>Top 3 States:</p>
       <% if @top_3_shipping_states %>
@@ -24,7 +26,7 @@
       <p>(none yet)</p>
       <% end %>
     </div>
-    
+
     <div id='stats-top-cities'>
     <p>Top 3 Cities:</p>
       <% if @top_3_shipping_cities %>
@@ -82,11 +84,39 @@
   <% end %>
 <% end %>
 
+<% if current_user.id == session[:user_id] && @merchant.coupon_codes.count > 0 %>
+  <h3>Active Coupons</h3>
+  <table>
+    <thead>
+      <th>Coupon Code</th>
+      <th>Value</th>
+      <th>Order Minimum</th>
+    </thead>
+    <tbody>
+      <% @coupons.each do |coupon| %>
+        <tr class="coupon" id="coupon-<%= coupon.id %>">
+          <td><%= coupon.code %></td>
+          <% if coupon.coupon_type == 'dollars_off' %>
+            <td><%= number_to_currency(coupon.value) %> off</td>
+          <% else %>
+            <td><%= coupon.value %>% off</td>
+          <% end %>
+          <% if coupon.minimum_order == 0.0 %>
+            <td>Any Order</td>
+          <% else %>
+            <td>Orders Above: <%= number_to_currency(coupon.minimum_order) %></td>
+          <% end %>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>
+
 <% if current_admin? %>
   <% if @merchant.active %>
   <%= button_to "Disable", user_path(@merchant), method: :patch, params: { toggle: :disable } %>
   <% else %>
   <%= button_to "Enable", user_path(@merchant), method: :patch, params: { toggle: :enable } %>
   <% end %>
-  <%= button_to "Upgrade to Merchant", user_path(@merchant), method: :patch, params: { toggle: :role } %> 
+  <%= button_to "Upgrade to Merchant", user_path(@merchant), method: :patch, params: { toggle: :role } %>
 <% end %>
